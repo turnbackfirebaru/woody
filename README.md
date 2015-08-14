@@ -37,3 +37,6 @@ logger remains in tact and operationally independent; It can be used as before.
 > threading down a function may not be a great idea. It's best used for internal
 > loggers or where the function does not reference any outer state, such as e.g.
 > a timestamped logger.
+
+:construction: ...More docs coming soon... :construction:
+
