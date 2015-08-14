@@ -11,13 +11,13 @@ export default class Logger {
   /*
    * @constructor
    *
-   * @param {!Logger~commitCallback} commit
+   * @param {Function} commit
    * Given a rendered context stack, commit it, e.g. print to console.
    *
-   * @param {!Logger~renderCallback} render
+   * @param {Function} render
    * Transform the context stack into a single object, e.g. a string.
    *
-   * @param {?(Object|Object[])} contexts
+   * @param {Object[]} contexts
    * The context stack the logger is running in.
    */
 
