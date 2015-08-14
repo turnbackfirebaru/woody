@@ -4,7 +4,7 @@
   "description": "Simple logging combinator library for node",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/log.js"
+    "test": "gulp && mocha test/log.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "moment": "^2.10.2"
   },
   "devDependencies": {
+    "mocha": "^2.1.0",
     "babel-runtime": "^5.8.20",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.0",
