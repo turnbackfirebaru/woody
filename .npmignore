@@ -1,0 +1,6 @@
+*.sw[opqrst]
+*.un~
+node_modules/
+src/
+test/
+.*
