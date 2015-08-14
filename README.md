@@ -21,8 +21,8 @@ logger.warn('Good stuff');
 
 ## Installation
 
-```
-$ npm install --save beaver
+```bash
+$ npm install --save beaver # XXX not just yet
 ```
 
 ## Usage
