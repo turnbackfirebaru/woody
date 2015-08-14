@@ -1,0 +1,4 @@
+*.sw[opqrst]
+*.un~
+dist/
+node_modules/
