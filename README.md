@@ -1,35 +1,35 @@
-# Beaver
+# Woody
 
-[![Build Status](https://travis-ci.org/felixSchl/beaver.svg?branch=master)](https://travis-ci.org/felixSchl/beaver)
+[![Build Status](https://travis-ci.org/felixSchl/woody.svg?branch=master)](https://travis-ci.org/felixSchl/woody)
 
 > Tiny logging combinator library for node
 
 :construction: ...work in progress... :construction:
 
 ```javascript
-import beaver from './beaver';
-const logger = beaver
+import woody from './woody';
+const logger = woody
     .bracketed()
-    .to(beaver.console);
+    .to(woody.console);
     .level()
     .timestamped()
-    .context('beaver');
+    .context('woody');
 
 logger.warn('Good stuff');
 
 // console:
-// [WARN][2015-06-02 ...][beaver]  Good stuff
+// [WARN][2015-06-02 ...][woody]  Good stuff
 ```
 
 ## Installation
 
 ```bash
-$ npm install --save beaver # XXX not just yet
+$ npm install --save woody # XXX not just yet
 ```
 
 ## Usage
 
-The idea of beaver is to make it as easily as possible to contextualize logging.
+The idea of woody is to make it as easily as possible to contextualize logging.
 
 The `.context()` function takes either a string or a function and creates a
 **new logger** with the new context pushed onto it's context stack. The old
