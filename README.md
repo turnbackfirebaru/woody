@@ -1,0 +1,37 @@
+# Beaver
+
+> Tiny logging combinator library for node
+
+```javascript
+import beaver from './beaver';
+const logger = beaver
+    .bracketed()
+    .to(beaver.console);
+    .level()
+    .timestamped()
+    .context('beaver');
+
+logger.warn('Good stuff');
+
+// console:
+// [WARN][2015-06-02 ...][beaver]  Good stuff
+```
+
+## Installation
+
+```
+$ npm install --save beaver
+```
+
+## Usage
+
+The idea of beaver is to make it as easily as possible to contextualize logging.
+
+The `.context()` function takes either a string or a function and creates a
+**new logger** with the new context pushed onto it's context stack. The old
+logger remains in tact and operationally independent; It can be used as before.
+
+> :warning: Note that since functions can capture state at site of definition,
+> threading down a function may not be a great idea. It's best used for internal
+> loggers or where the function does not reference any outer state, such as e.g.
+> a timestamped logger.

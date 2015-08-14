@@ -28,8 +28,7 @@ export function dotted() {
     (level, contexts, messages) =>
       (contexts.length > 0)
         ? contexts.join('.') + ': ' + messages.join(' ')
-        : messages.join(' ');
-  );
+        : messages.join(' '));
 }
 
 /**

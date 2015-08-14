@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
+import { timestamped, level } from './comb';
 
 /**
  * @class
@@ -99,5 +100,13 @@ export default class Logger {
         [ this._render.call(this, contexts, messages)
         , other._render.call(other, contexts, messages) ]
     , this._contexts);
+  }
+
+  timestamped(format) {
+    return timestamped(this, format);
+  }
+
+  level() {
+    return level(this);
   }
 }

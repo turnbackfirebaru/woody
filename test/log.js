@@ -97,7 +97,7 @@ describe('A', function() {
 
     describe('Timestamped', function() {
       it('Renders timestamps', function() {
-        var loggerTimed = log.timestamped(logger);
+        var loggerTimed = logger.timestamped();
         loggerTimed.log('test');
         var date = _.takeWhile(
           _.drop(logs[0].message, 1)
@@ -108,7 +108,7 @@ describe('A', function() {
 
     describe('Level', function() {
       it('Renders levels', function() {
-        var loggerLevel = log.level(logger);
+        var loggerLevel = logger.level();
         loggerLevel.log('test');
         var level = _.takeWhile(
           _.drop(logs[0].message, 1)
