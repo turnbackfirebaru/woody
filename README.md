@@ -4,8 +4,6 @@
 
 > Tiny logging combinator library for node
 
-:construction: ...work in progress... :construction:
-
 ```javascript
 import woody from './woody';
 const logger = woody
@@ -24,7 +22,7 @@ logger.warn('Good stuff');
 ## Installation
 
 ```bash
-$ npm install --save woody # XXX not just yet
+$ npm install --save woody
 ```
 
 ## Usage
