@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Logger from './logger';
+import Logger from './Logger';
 
 /**
  * Partially apply the Logger constructor with a render function.
