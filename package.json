@@ -1,5 +1,5 @@
 {
-  "name": "beaver",
+  "name": "beavers",
   "version": "0.0.1",
   "description": "Simple logging combinator library for node",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/felixSchl/beaver.git"
+    "url": "https://github.com/felixSchl/beavers.git"
   },
   "keywords": [
     "logging"
@@ -16,9 +16,9 @@
   "author": "Felix Schlitter",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/felixSchl/beaver/issues"
+    "url": "https://github.com/felixSchl/beavers/issues"
   },
-  "homepage": "https://github.com/felixSchl/beaver",
+  "homepage": "https://github.com/felixSchl/beavers",
   "dependencies": {
     "lodash": "^3.7.0",
     "moment": "^2.10.2"
