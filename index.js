@@ -1,4 +1,4 @@
 'use strict';
 
 module.exports = require('./dist');
-module.exports.default = module.exports;
+console.log(module.exports);

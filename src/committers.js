@@ -1,12 +1,14 @@
+import _ from 'lodash';
+
 /*
  * Commit to nowhere.
  */
-export function nowhere() {};
+export function toNowhere() {};
 
 /*
  * Commit message to console.
  */
-export function console(level, message) {
+export function toConsole(level, message) {
   level = _.has(console, level) ? level : 'info';
   console[level].apply(console, [message]);
 };
@@ -20,7 +22,7 @@ export function console(level, message) {
  * @returns {Function}
  * Returns a callback to create a new logger with.
  */
-export function log4js(log4jsLogger) {
+export function toLog4js(log4jsLogger) {
   return (level, message) => {
     const lvl = (level === 'log') ? 'info' : level;
     if (log4jsLogger[lvl]) {
