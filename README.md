@@ -2,6 +2,8 @@
 
 > Tiny logging combinator library for node
 
+:construction: ...work in progress... :construction:
+
 ```javascript
 import beaver from './beaver';
 const logger = beaver
