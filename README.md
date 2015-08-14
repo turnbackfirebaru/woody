@@ -1,5 +1,7 @@
 # Beaver
 
+[![Build Status](https://travis-ci.org/felixSchl/beaver.svg?branch=master)](https://travis-ci.org/felixSchl/beaver)
+
 > Tiny logging combinator library for node
 
 :construction: ...work in progress... :construction:
