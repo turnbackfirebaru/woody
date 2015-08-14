@@ -23,9 +23,4 @@ export function as(render) {
  * @returns {Logger}
  * A noop logger.
  */
-export function noop() {
-  return new Logger(
-      () => {}
-    , () => {}
-  );
-};
+export const noop = new Logger(() => {}, () => {});
