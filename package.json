@@ -1,7 +1,7 @@
 {
   "name": "woody",
-  "version": "0.0.1",
-  "description": "Simple logging combinator library for node",
+  "version": "0.0.2",
+  "description": "Tiny logging combinator library for node",
   "main": "index.js",
   "scripts": {
     "test": "gulp && mocha test/log.js"
