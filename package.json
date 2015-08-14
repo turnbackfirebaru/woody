@@ -24,10 +24,11 @@
     "moment": "^2.10.2"
   },
   "devDependencies": {
-    "mocha": "^2.1.0",
     "babel-runtime": "^5.8.20",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.0",
-    "gulp-sourcemaps": "^1.5.2"
+    "gulp-sourcemaps": "^1.5.2",
+    "mocha": "^2.1.0",
+    "source-map-support": "^0.3.2"
   }
 }
