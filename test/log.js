@@ -125,15 +125,17 @@ describe('A', function() {
         var msgs = [];
         var logger1 = log
           .bracketed()
-          .to(function() {
+          .to(function(level, rendered) {
             assert.strictEqual(x, null);
+            assert.strictEqual(rendered, 'test');
             x = 10;
           });
 
         var logger2 = log
           .bracketed()
-          .to(function() {
+          .to(function(level, rendered) {
             assert.notStrictEqual(x, null);
+            assert.strictEqual(rendered, 'test');
           });
 
         var logger3 = logger1.sequence(logger2);

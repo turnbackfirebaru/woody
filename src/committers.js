@@ -5,8 +5,6 @@ export function nowhere() {};
 
 /*
  * Commit message to console.
- *
- * @alias {Logger~commitCallback}
  */
 export function console(level, message) {
   level = _.has(console, level) ? level : 'info';

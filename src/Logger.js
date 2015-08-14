@@ -49,20 +49,20 @@ export default class Logger {
           _.isFunction(context)
             ? context.apply({ level: level})
             : context)
-      , _.flatten(args, false)));
+      , _.toArray(args)));
   };
 
   /**
    * Provide log levels as specied in log4js.
    */
 
-  log() { this._log('log', arguments) }
-  info() { this._log('info', arguments) }
-  warn() { this._log('warn', arguments) }
-  error() { this._log('error', arguments) }
-  debug() { this._log('debug', arguments) }
-  trace() { this._log('trace', arguments) }
-  verbose() { this._log('verbose', arguments) }
+  log() { this._log('log', _.toArray(arguments)) }
+  info() { this._log('info', _.toArray(arguments)) }
+  warn() { this._log('warn', _.toArray(arguments)) }
+  error() { this._log('error', _.toArray(arguments)) }
+  debug() { this._log('debug', _.toArray(arguments)) }
+  trace() { this._log('trace', _.toArray(arguments)) }
+  verbose() { this._log('verbose', _.toArray(arguments)) }
 
   /**
    * Contextualize the logger.
@@ -91,16 +91,25 @@ export default class Logger {
    * Returns a new Logger instance.
    */
   sequence(other) {
+    const self = this;
     return new Logger(
-      ([left, right]) => {
-        this._commit.call(this, left);
-        other._commit.call(other, right);
+      (level, [left, right]) => {
+        self._commit.call(self, level, left);
+        other._commit.call(other, level, right);
       }
-    , (contexts, messages) =>
-        [ this._render.call(this, contexts, messages)
-        , other._render.call(other, contexts, messages) ]
-    , this._contexts);
+    , (level, contexts, messages) =>
+        [ self._render.call(self, level, contexts, messages)
+        , other._render.call(other, level, contexts, messages) ]
+    , self._contexts);
   }
+
+  /*
+   * Add the various combinators to the prototype for
+   * a function chaining interface.
+   *
+   * XXX Could this be solved differently? In such a way that
+   *     combinators can be contributed in user land?
+   */
 
   timestamped(format) {
     return timestamped(this, format);
