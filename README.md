@@ -99,3 +99,28 @@ function foo(bar, logger=woody.noop) {
 > :warning: `noop` only means it does not render or commit anything.
 > Sequencing it with another logger using `.sequence` will *not* return a `noop`
 > logger, but a logger that applies both the `noop` and the second logger.
+
+### Integration with `debug`
+
+There is out-of-the-box integration with the [debug](https://www.npmjs.com/package/debug)
+package on npm:
+
+```javascript
+import woody from 'woody';
+
+const debug = woody.debug().context('woody')
+    , debugFoo = debug.context('foo');
+
+debug.log('foo');
+debugFoo.log('qux');
+debug.log('bar');
+debugFoo.log('biz');
+
+```
+
+yields
+
+>   <strong style="color:orange">woody</strong> foo +0ms<br/>
+>   <strong style="color:#5a2">woody:foo</strong> qux +1ms<br/>
+>   <strong style="color:orange">woody</strong> bar +2ms<br/>
+>   <strong style="color:#5a2">woody:foo</strong> biz +3ms
