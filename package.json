@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/felixSchl/woody",
   "dependencies": {
+    "debug": "^2.2.0",
     "lodash": "^3.7.0",
     "moment": "^2.10.2"
   },

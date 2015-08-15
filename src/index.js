@@ -1,18 +1,24 @@
 import
 { as
-, noop } from './cons';
+, noop }
+from './cons';
 
 import
 { toConsole
 , toNowhere
-, toLog4js } from './committers';
+, toLog4js }
+from './committers';
 
 import
 { bracketed
 , dotted
 , stringified
-, verbatim } from './renderers';
+, verbatim }
+from './renderers';
 
+import
+{ debug }
+from './presets';
 
 export default {
 
@@ -41,4 +47,8 @@ export default {
 , nowhere: toNowhere
 , log4js: toLog4js
 
+/**
+ * Presets
+ */
+, debug: debug
 }

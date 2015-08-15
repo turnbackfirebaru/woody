@@ -41,7 +41,7 @@ export function verbatim() {
   return as(
     (level, contexts, messages) =>
       ({ contexts: contexts
-        , messages: messages }));
+       , messages: messages }));
 };
 
 /**

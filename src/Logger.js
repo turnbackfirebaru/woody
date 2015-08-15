@@ -41,10 +41,13 @@ export default class Logger {
    */
 
   _log(level, args) {
-    this._commit(
-      level
-    , this._render(
-        level
+    var self = this;
+    this._commit.call(
+      this
+    , level
+    , this._render.call(
+        this
+      , level
       , _.map(this._contexts, context =>
           _.isFunction(context)
             ? context.apply({ level: level})
@@ -82,10 +85,11 @@ export default class Logger {
   }
 
   /**
-   * Combine two loggers by invoking the current
-   * logger first and then the second (other).
+   * Pipe the rendered output of this logger into another
+   * comitter.
    *
-   * @param {!Logger} other - The logger to sequence
+   * @param {!Logger} other
+   * The logger to sequence
    *
    * @returns {!Logger}
    * Returns a new Logger instance.
