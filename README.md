@@ -1,5 +1,6 @@
 # Woody
 
+[![npm version](https://badge.fury.io/js/woody.svg)](http://badge.fury.io/js/woody)
 [![Build Status](https://travis-ci.org/felixSchl/woody.svg?branch=master)](https://travis-ci.org/felixSchl/woody)
 
 > Tiny logging combinator library for node
