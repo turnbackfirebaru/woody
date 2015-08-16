@@ -76,7 +76,7 @@ export default class Logger {
    * @returns {!Logger}
    * Returns a new logger with a new context pushed onto it's context stack.
    */
-  context(context) {
+  push(context) {
     return new Logger(
         this._commit
       , this._render

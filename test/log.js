@@ -61,12 +61,12 @@ describe('A', function() {
         .to(woody.nowhere);
 
       logger.log();
-      logger.context('ctx').info();
+      logger.push('ctx').info();
       logger.log();
-      logger.context('ctx').context('foo').context('bar').log();
+      logger.push('ctx').push('foo').push('bar').log();
 
       var i = 0
-        , f = logger.context(function() { return '' + (i++); });
+        , f = logger.push(function() { return '' + (i++); });
       _.times(2, f.log.bind(f));
 
       var expected = [
@@ -97,7 +97,7 @@ describe('A', function() {
 
     describe('Timestamped', function() {
       it('Renders timestamps', function() {
-        var loggerTimed = logger.context(woody.timestamp());
+        var loggerTimed = logger.push(woody.timestamp());
         loggerTimed.log('test');
         var date = _.takeWhile(
           _.drop(logs[0].message, 1)
@@ -108,7 +108,7 @@ describe('A', function() {
 
     describe('Level', function() {
       it('Renders levels', function() {
-        var loggerLevel = logger.context(woody.level());
+        var loggerLevel = logger.push(woody.level());
         loggerLevel.log('test');
         var level = _.takeWhile(
           _.drop(logs[0].message, 1)
