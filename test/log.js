@@ -31,9 +31,11 @@ describe('A', function() {
 
   describe('baseline logger', function() {
     it('logs level and message', function() {
-      var logger = woody.bracketed().to(function(level, message) {
-        logs.push({ level: level, message: message });
-      });
+      var logger = woody
+        .as(woody.bracketed())
+        .to(function(level, message) {
+          logs.push({ level: level, message: message });
+        });
 
       logger.info('foo-0');
       logger.warn('foo-1');
@@ -90,9 +92,11 @@ describe('A', function() {
   describe('Built-in logging combinators', function() {
     var logger = null;
     beforeEach(function() {
-      logger = woody.bracketed().to(function(level, message) {
-        logs.push({ level: level, message: message });
-      });
+      logger = woody
+        .as(woody.bracketed())
+        .to(function(level, message) {
+          logs.push({ level: level, message: message });
+        });
     });
 
     describe('Timestamped', function() {
@@ -124,7 +128,7 @@ describe('A', function() {
         var x = null;
         var msgs = [];
         var logger1 = woody
-          .bracketed()
+          .as(woody.bracketed())
           .to(function(level, rendered) {
             assert.strictEqual(x, null);
             assert.strictEqual(rendered, 'test');
@@ -132,7 +136,7 @@ describe('A', function() {
           });
 
         var logger2 = woody
-          .bracketed()
+          .as(woody.bracketed())
           .to(function(level, rendered) {
             assert.notStrictEqual(x, null);
             assert.strictEqual(rendered, 'test');

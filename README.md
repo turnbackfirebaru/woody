@@ -8,7 +8,7 @@
 ```javascript
 import woody from './woody';
 const logger = woody
-    .bracketed()
+    .as(woody.bracketed())
     .to(woody.console);
     .push(woody.level())
     .push(woody.timestamp())
@@ -57,7 +57,7 @@ class Foo {
 class Application {
   constructor() {
     const logger = woody
-      .bracketed()
+      .as(woody.bracketed())
       .to(woody.console)
       .push('app');
     logger.info('created');
