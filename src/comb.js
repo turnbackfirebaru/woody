@@ -2,34 +2,29 @@ import moment from 'moment';
 import Logger from './Logger';
 
 /**
- * Pushes a timestamp on to the context stack
- *
- * @param {Logger}
- * The logger to timestamp.
+ * Pushes a timestamp on to the context stack.
+ * It's dynamically fetched everytime a message is
+ * logged.
  *
  * @param {String}
  * The date format to use.
  *
- * @returns {Logger}
- * The timestamped logger.
+ * @returns {Function}
  */
-export function timestamped(logger, format) {
-  return logger.context(() =>
+export function timestamp(format) {
+  return () =>
     moment()
-      .format(format || 'YYYY-MM-DD hh:mm:ss.SSS'));
+      .format(format || 'YYYY-MM-DD hh:mm:ss.SSS');
 };
 
 /**
- * Push log-level onto the context stack
+ * Push the log-level onto the context stack.
+ * It's dynamically fetched from the invocation.
  *
- * @param {Logger}
- * The logger to print levels on.
- *
- * @returns {Logger}
- * The new logger
+ * @returns {Function}
  */
-export function level(logger) {
-  return logger.context(function() {
+export function level() {
+  return function() {
     return this.level.toUpperCase();
-  });
+  };
 };

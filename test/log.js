@@ -1,6 +1,6 @@
 'use strict';
 
-var log = require('..')
+var woody = require('..')
   , _ = require('lodash')
   , moment = require('moment')
   , assert = require('assert');
@@ -31,7 +31,7 @@ describe('A', function() {
 
   describe('baseline logger', function() {
     it('logs level and message', function() {
-      var logger = log.bracketed().to(function(level, message) {
+      var logger = woody.bracketed().to(function(level, message) {
         logs.push({ level: level, message: message });
       });
 
@@ -56,9 +56,9 @@ describe('A', function() {
 
   describe('contextualized logger', function() {
     it('stacks it\'s contexts', function() {
-      var logger = log
+      var logger = woody
         .as(function(level, contexts, message) { logs.push(contexts); })
-        .to(log.nowhere);
+        .to(woody.nowhere);
 
       logger.log();
       logger.context('ctx').info();
@@ -90,14 +90,14 @@ describe('A', function() {
   describe('Built-in logging combinators', function() {
     var logger = null;
     beforeEach(function() {
-      logger = log.bracketed().to(function(level, message) {
+      logger = woody.bracketed().to(function(level, message) {
         logs.push({ level: level, message: message });
       });
     });
 
     describe('Timestamped', function() {
       it('Renders timestamps', function() {
-        var loggerTimed = logger.timestamped();
+        var loggerTimed = logger.context(woody.timestamp());
         loggerTimed.log('test');
         var date = _.takeWhile(
           _.drop(logs[0].message, 1)
@@ -108,7 +108,7 @@ describe('A', function() {
 
     describe('Level', function() {
       it('Renders levels', function() {
-        var loggerLevel = logger.level();
+        var loggerLevel = logger.context(woody.level());
         loggerLevel.log('test');
         var level = _.takeWhile(
           _.drop(logs[0].message, 1)
@@ -123,7 +123,7 @@ describe('A', function() {
       it('invokes the current logger first, and then the second', function() {
         var x = null;
         var msgs = [];
-        var logger1 = log
+        var logger1 = woody
           .bracketed()
           .to(function(level, rendered) {
             assert.strictEqual(x, null);
@@ -131,7 +131,7 @@ describe('A', function() {
             x = 10;
           });
 
-        var logger2 = log
+        var logger2 = woody
           .bracketed()
           .to(function(level, rendered) {
             assert.notStrictEqual(x, null);

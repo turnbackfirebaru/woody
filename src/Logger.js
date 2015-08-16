@@ -106,20 +106,4 @@ export default class Logger {
         , other._render.call(other, level, contexts, messages) ]
     , self._contexts);
   }
-
-  /*
-   * Add the various combinators to the prototype for
-   * a function chaining interface.
-   *
-   * XXX Could this be solved differently? In such a way that
-   *     combinators can be contributed in user land?
-   */
-
-  timestamped(format) {
-    return timestamped(this, format);
-  }
-
-  level() {
-    return level(this);
-  }
 }

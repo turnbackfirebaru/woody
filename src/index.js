@@ -20,6 +20,11 @@ import
 { debug }
 from './presets';
 
+import
+{ timestamp
+, level }
+from './comb';
+
 export default {
 
 /**
@@ -51,4 +56,11 @@ export default {
  * Presets
  */
 , debug: debug
+
+/**
+ * Built-in context functions
+ */
+, timestamp: timestamp
+, level: level
+
 }
