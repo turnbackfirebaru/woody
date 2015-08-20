@@ -22,10 +22,10 @@
   "dependencies": {
     "debug": "^2.2.0",
     "lodash": "^3.7.0",
-    "moment": "^2.10.2"
+    "moment": "^2.10.2",
+    "babel-runtime": "^5.8.20"
   },
   "devDependencies": {
-    "babel-runtime": "^5.8.20",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.0",
     "gulp-sourcemaps": "^1.5.2",
