@@ -88,7 +88,7 @@ export default class Logger {
    * Alias for `fork`
    */
   push(context) {
-    this.fork(context);
+    return this.fork(context);
   }
 
   /**
