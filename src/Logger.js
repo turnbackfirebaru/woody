@@ -80,8 +80,10 @@ export default class Logger {
     return new Logger(
         this._commit
       , this._render
-      , this._contexts.concat([context])
-    );
+      , this._contexts.concat(
+          (_.isUndefined(context) || _.isNull(context))
+            ? []
+            : [context]));
   }
 
   /**

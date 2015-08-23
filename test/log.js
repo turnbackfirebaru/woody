@@ -87,6 +87,27 @@ describe('A', function() {
         }));
       }));
     });
+
+    it('returns the same, but not identical logger if context is null/undefined', function() {
+      var logger = woody
+        .as(function(level, contexts, message) { logs.push(contexts); })
+        .to(woody.nowhere);
+
+      logger.log('test');
+      logger.fork().log('test');
+
+      assert.strictEqual(logs[0].length, 0);
+      assert.strictEqual(logs[1].length, 0);
+
+      logger.fork('cat').log('test');
+      logger.fork('cat').fork().log('test');
+
+      assert.strictEqual(logs[2].length, 1);
+      assert.strictEqual(logs[3].length, 1);
+
+      assert.strictEqual(logs[2][0], 'cat');
+      assert.strictEqual(logs[3][0], 'cat');
+    });
   });
 
   describe('Built-in logging combinators', function() {
