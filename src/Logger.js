@@ -76,12 +76,19 @@ export default class Logger {
    * @returns {!Logger}
    * Returns a new logger with a new context pushed onto it's context stack.
    */
-  push(context) {
+  fork(context) {
     return new Logger(
         this._commit
       , this._render
       , this._contexts.concat([context])
     );
+  }
+
+  /**
+   * Alias for `fork`
+   */
+  push(context) {
+    this.fork(context);
   }
 
   /**

@@ -9,10 +9,10 @@
 import woody from './woody';
 const logger = woody
     .as(woody.bracketed())
-    .to(woody.console);
-    .push(woody.level())
-    .push(woody.timestamp())
-    .push('woody');
+    .to(woody.console)
+    .fork(woody.level())
+    .fork(woody.timestamp())
+    .fork('woody');
 
 logger.warn('Good stuff');
 
@@ -32,7 +32,7 @@ The idea of woody is to make it as easy as possible to contextualize logging.
 The application or library using woody could have a root logger and then pass
 "contextualized" sub-loggers into different areas of the codebase.
 
-The `.push(...)` function takes either a string or a function and creates a
+The `.fork(...)` function takes either a string or a function and creates a
 **new logger** with the new context pushed onto it's context stack. The old
 logger remains in tact and operationally independent; It can be used as before.
 
@@ -44,7 +44,7 @@ logger remains in tact and operationally independent; It can be used as before.
 
 ### Application domains
 
-The `.push(...)` function lends itself very well to creating application or
+The `.fork(...)` function lends itself very well to creating application or
 library domain specific loggers:
 
 ```javascript
@@ -59,9 +59,9 @@ class Application {
     const logger = woody
       .as(woody.bracketed())
       .to(woody.console)
-      .push('app');
+      .fork('app');
     logger.info('created');
-    const foo = new Foo(logger.push('foo'));
+    const foo = new Foo(logger.fork('foo'));
   }
 }
 ```
@@ -109,8 +109,8 @@ package on npm:
 ```javascript
 import woody from 'woody';
 
-const debug = woody.debug().push('woody')
-    , debugFoo = debug.push('foo');
+const debug = woody.debug().fork('woody')
+    , debugFoo = debug.fork('foo');
 
 debug.log('foo');
 debugFoo.log('qux');
