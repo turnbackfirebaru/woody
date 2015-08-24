@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Level from './level';
+import Level from './Level';
 import moment from 'moment';
 import { timestamped, level } from './comb';
 
