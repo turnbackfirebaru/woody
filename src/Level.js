@@ -1,16 +1,14 @@
 const Level = {
-  LOG:     0
-, INFO:    1
-, WARN:    2
-, ERROR:   3
-, DEBUG:   4
-, TRACE:   5
-, VERBOSE: 6
+  INFO:    0
+, WARN:    1
+, ERROR:   2
+, DEBUG:   3
+, TRACE:   4
+, VERBOSE: 5
 };
 
 const _levelNames = {
-  [Level.LOG]: 'log'
-, [Level.INFO]: 'info'
+  [Level.INFO]: 'info'
 , [Level.WARN]: 'warn'
 , [Level.ERROR]: 'error'
 , [Level.DEBUG]: 'debug'

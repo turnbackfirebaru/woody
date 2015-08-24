@@ -67,7 +67,7 @@ export default class Logger {
    * Provide log levels as specied in log4js.
    */
 
-  log() { return this._log(Level.LOG, _.toArray(arguments)) }
+  log() { return this._log(Level.INFO, _.toArray(arguments)) }
   info() { return this._log(Level.INFO, _.toArray(arguments)) }
   warn() { return this._log(Level.WARN, _.toArray(arguments)) }
   error() { return this._log(Level.ERROR, _.toArray(arguments)) }

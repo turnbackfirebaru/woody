@@ -52,7 +52,7 @@ describe('A', function() {
         , woody.level.VERBOSE, 'foo-3'
         , woody.level.DEBUG, 'foo-4'
         , woody.level.TRACE, 'foo-5'
-        , woody.level.LOG, 'foo-6' ]);
+        , woody.level.INFO, 'foo-6' ]);
     });
   });
 
@@ -138,7 +138,7 @@ describe('A', function() {
         var level = _.takeWhile(
           _.drop(logs[0].message, 1)
         , function(c) { return c !== ']'; }).join('');
-        assert(level === 'LOG');
+        assert(level === 'INFO');
       });
     });
   });
