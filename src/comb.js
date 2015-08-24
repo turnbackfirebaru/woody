@@ -1,5 +1,6 @@
 import moment from 'moment';
 import Logger from './Logger';
+import Level from './Level';
 
 /**
  * Pushes a timestamp on to the context stack.
@@ -25,6 +26,6 @@ export function timestamp(format) {
  */
 export function level() {
   return function() {
-    return this.level.toUpperCase();
+    return Level.toString(this.level).toUpperCase();
   };
 };

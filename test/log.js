@@ -37,22 +37,22 @@ describe('A', function() {
           logs.push({ level: level, message: message });
         });
 
-      logger.info('foo-0');
-      logger.warn('foo-1');
-      logger.error('foo-2');
-      logger.verbose('foo-3');
-      logger.debug('foo-4');
-      logger.trace('foo-5');
-      logger.log('foo-6');
+      logger.info('foo-0')
+            .warn('foo-1')
+            .error('foo-2')
+            .verbose('foo-3')
+            .debug('foo-4')
+            .trace('foo-5')
+            .log('foo-6');
 
       validate(
-        [ 'info', 'foo-0'
-        , 'warn', 'foo-1'
-        , 'error', 'foo-2'
-        , 'verbose', 'foo-3'
-        , 'debug', 'foo-4'
-        , 'trace', 'foo-5'
-        , 'log', 'foo-6' ]);
+        [ woody.level.INFO, 'foo-0'
+        , woody.level.WARN, 'foo-1'
+        , woody.level.ERROR, 'foo-2'
+        , woody.level.VERBOSE, 'foo-3'
+        , woody.level.DEBUG, 'foo-4'
+        , woody.level.TRACE, 'foo-5'
+        , woody.level.LOG, 'foo-6' ]);
     });
   });
 

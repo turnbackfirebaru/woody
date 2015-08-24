@@ -1,3 +1,7 @@
+import _ from 'lodash';
+
+import Level from './Level';
+
 import
 { as
 , noop }
@@ -61,6 +65,6 @@ export default {
  * Built-in context functions
  */
 , timestamp: timestamp
-, level: level
+, level: _.assign(level, Level)
 
 }

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Level from './level';
 import moment from 'moment';
 import { timestamped, level } from './comb';
 
@@ -19,12 +20,15 @@ export default class Logger {
    *
    * @param {Object[]} contexts
    * The context stack the logger is running in.
+   *
+   * @param {(Boolean|Function)[]} conditions
    */
 
-  constructor(commit, render, contexts=[]) {
+  constructor(commit, render, contexts=[], conds=[]) {
     this._commit = commit;
     this._render = render;
     this._contexts = contexts;
+    this._conditions = conds;
   }
 
   /**
@@ -41,31 +45,35 @@ export default class Logger {
    */
 
   _log(level, args) {
-    var self = this;
-    this._commit.call(
-      this
-    , level
-    , this._render.call(
+    if (_.all(
+      this._conditions
+    , cond => (_.isFunction(cond) ? cond(level) : code))) {
+      this._commit.call(
         this
       , level
-      , _.map(this._contexts, context =>
-          _.isFunction(context)
-            ? context.apply({ level: level})
-            : context)
-      , _.toArray(args)));
+      , this._render.call(
+          this
+        , level
+        , _.map(this._contexts, context =>
+            _.isFunction(context)
+              ? context.apply({ level: level})
+              : context)
+        , _.toArray(args)));
+    }
+    return this;
   };
 
   /**
    * Provide log levels as specied in log4js.
    */
 
-  log() { this._log('log', _.toArray(arguments)) }
-  info() { this._log('info', _.toArray(arguments)) }
-  warn() { this._log('warn', _.toArray(arguments)) }
-  error() { this._log('error', _.toArray(arguments)) }
-  debug() { this._log('debug', _.toArray(arguments)) }
-  trace() { this._log('trace', _.toArray(arguments)) }
-  verbose() { this._log('verbose', _.toArray(arguments)) }
+  log() { return this._log(Level.LOG, _.toArray(arguments)) }
+  info() { return this._log(Level.INFO, _.toArray(arguments)) }
+  warn() { return this._log(Level.WARN, _.toArray(arguments)) }
+  error() { return this._log(Level.ERROR, _.toArray(arguments)) }
+  debug() { return this._log(Level.DEBUG, _.toArray(arguments)) }
+  trace() { return this._log(Level.TRACE, _.toArray(arguments)) }
+  verbose() { return this._log(Level.VERBOSE, _.toArray(arguments)) }
 
   /**
    * Contextualize the logger.
@@ -83,7 +91,8 @@ export default class Logger {
       , this._contexts.concat(
           (_.isUndefined(context) || _.isNull(context))
             ? []
-            : [context]));
+            : [context])
+      , this._conditions.concat([]));
   }
 
   /**
@@ -91,6 +100,17 @@ export default class Logger {
    */
   push(context) {
     return this.fork(context);
+  }
+
+  if(cond) {
+    return new Logger(
+        this._commit
+      , this._render
+      , this._contexts.concat([])
+      , this._conditions.concat(
+          (_.isUndefined(cond) || _.isNull(cond))
+            ? []
+            : [cond]));
   }
 
   /**
@@ -113,6 +133,7 @@ export default class Logger {
     , (level, contexts, messages) =>
         [ self._render.call(self, level, contexts, messages)
         , other._render.call(other, level, contexts, messages) ]
-    , self._contexts);
+    , self._contexts
+    , self._conditions);
   }
 }

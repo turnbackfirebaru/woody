@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Level from './Level';
 
 /*
  * Commit to nowhere.
@@ -9,6 +10,7 @@ export function toNowhere() {};
  * Commit message to console.
  */
 export function toConsole(level, message) {
+  level = Level.toString(level);
   level = _.has(console, level) ? level : 'info';
   console[level].apply(console, [message]);
 };
@@ -24,9 +26,10 @@ export function toConsole(level, message) {
  */
 export function toLog4js(log4jsLogger) {
   return (level, message) => {
-    const lvl = (level === 'log') ? 'info' : level;
-    if (log4jsLogger[lvl]) {
-      log4jsLogger[lvl](message);
+    level = Level.toString(level);
+    level = (level === 'log') ? 'info' : level;
+    if (log4jsLogger[level]) {
+      log4jsLogger[level](message);
     }
   };
 };
