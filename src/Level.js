@@ -1,10 +1,10 @@
 const Level = {
-  INFO:    0
-, WARN:    1
-, ERROR:   2
-, DEBUG:   3
-, TRACE:   4
-, VERBOSE: 5
+  INFO:    5
+, WARN:    4
+, ERROR:   3
+, DEBUG:   2
+, TRACE:   1
+, VERBOSE: 0
 };
 
 const _levelNames = {

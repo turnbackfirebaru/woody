@@ -47,7 +47,15 @@ export default class Logger {
   _log(level, args) {
     if (_.all(
       this._conditions
-    , cond => (_.isFunction(cond) ? cond(level) : code))) {
+    , cond => (
+      /* condition is a function */
+      _.isFunction(cond)
+        ? cond(level)
+      /* condition is a log-level */
+    : _.isNumber(cond)
+        ? (level >= Level[cond])
+      /* condition is any old value */
+    :   cond))) {
       this._commit.call(
         this
       , level
