@@ -1,6 +1,6 @@
 {
   "name": "woody",
-  "version": "0.0.13",
+  "version": "0.0.20",
   "description": "Tiny logging combinator library for node",
   "main": "index.js",
   "scripts": {
