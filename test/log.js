@@ -112,6 +112,29 @@ describe('A logger', () => {
     assert.strictEqual(loggerContexts[5].length, 2);
   });
 
+  it('should cull logs based on the given log level', () => {
+    const logs = [];
+    const logger = woody
+      .as(woody.bracketed())
+      .to((level, msg) => {
+        logs.push({ level, msg });
+      });
+
+    logger
+      .if(woody.level.WARN)
+      .fatal()
+      .error()
+      .warn()
+      .info()
+      .debug()
+      .trace();
+
+    assert.strictEqual(logs.length, 3);
+    assert.strictEqual(logs[0].level, woody.level.FATAL);
+    assert.strictEqual(logs[1].level, woody.level.ERROR);
+    assert.strictEqual(logs[2].level, woody.level.WARN);
+  });
+
   it('should cull logs based on it\'s `conditionals', () => {
     const logs = [];
     const logger = woody

@@ -47,9 +47,9 @@ export default class Logger {
     if (_.all(
       this._conditions
     , cond => (
-        _.isFunction(cond) ? cond(level)
-      : _.isNumber(cond) ? (level >= Level[cond])
-      : cond))
+        _.isFunction(cond)
+          ? cond(level)
+          : (_.isNumber(cond) ? (level >= cond) : cond)))
     ) {
       this._commit.call(
         this
