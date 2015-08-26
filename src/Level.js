@@ -1,19 +1,19 @@
 const Level = {
-  INFO:    5
-, WARN:    4
-, ERROR:   3
-, DEBUG:   2
-, TRACE:   1
-, VERBOSE: 0
+  FATAL:   50000
+, ERROR:   40000
+, WARN:    30000
+, INFO:    20000
+, DEBUG:   10000
+, TRACE:    5000
 };
 
 const _levelNames = {
-  [Level.INFO]: 'info'
-, [Level.WARN]: 'warn'
-, [Level.ERROR]: 'error'
-, [Level.DEBUG]: 'debug'
-, [Level.TRACE]: 'trace'
-, [Level.VERBOSE]: 'verbose'
+  [Level.FATAL]:   'fatal'
+, [Level.ERROR]:   'error'
+, [Level.WARN]:    'warn'
+, [Level.INFO]:    'info'
+, [Level.DEBUG]:   'debug'
+, [Level.TRACE]:   'trace'
 };
 
 Level.toString = level => _levelNames[level];

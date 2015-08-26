@@ -37,7 +37,6 @@ export default class Logger {
    * @private
    *
    * @param {string} level - The log level.
-   * Must be one of 'log', 'info', 'warn', 'error', 'debug', 'trace', 'verbose'.
    *
    * @param {Object[]} x - The messages to log.
    *
@@ -48,14 +47,10 @@ export default class Logger {
     if (_.all(
       this._conditions
     , cond => (
-      /* condition is a function */
-      _.isFunction(cond)
-        ? cond(level)
-      /* condition is a log-level */
-    : _.isNumber(cond)
-        ? (level >= Level[cond])
-      /* condition is any old value */
-    :   cond))) {
+        _.isFunction(cond) ? cond(level)
+      : _.isNumber(cond) ? (level >= Level[cond])
+      : cond))
+    ) {
       this._commit.call(
         this
       , level
@@ -75,13 +70,13 @@ export default class Logger {
    * Provide log levels as specied in log4js.
    */
 
-  log() { return this._log(Level.INFO, _.toArray(arguments)) }
-  info() { return this._log(Level.INFO, _.toArray(arguments)) }
-  warn() { return this._log(Level.WARN, _.toArray(arguments)) }
-  error() { return this._log(Level.ERROR, _.toArray(arguments)) }
-  debug() { return this._log(Level.DEBUG, _.toArray(arguments)) }
-  trace() { return this._log(Level.TRACE, _.toArray(arguments)) }
-  verbose() { return this._log(Level.VERBOSE, _.toArray(arguments)) }
+  fatal() { return this._log(Level.FATAL, _.toArray(arguments)); }
+  error() { return this._log(Level.ERROR, _.toArray(arguments)); }
+  warn()  { return this._log(Level.WARN,  _.toArray(arguments)); }
+  log()   { return this._log(Level.INFO,  _.toArray(arguments)); }
+  info()  { return this._log(Level.INFO,  _.toArray(arguments)); }
+  debug() { return this._log(Level.DEBUG, _.toArray(arguments)); }
+  trace() { return this._log(Level.TRACE, _.toArray(arguments)); }
 
   /**
    * Contextualize the logger.

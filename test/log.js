@@ -1,178 +1,232 @@
-'use strict';
+import woody from '..';
+import _ from 'lodash';
+import assert from 'assert';
+import moment from 'moment';
 
-var woody = require('..')
-  , _ = require('lodash')
-  , moment = require('moment')
-  , assert = require('assert');
-
-/**
- * Install source maps.
- */
-
-require('source-map-support').install();
-
-describe('A', function() {
-
-  var logs = [];
-  beforeEach(function() {
-    logs.length = 0;
-  });
-
-  var validate = function(expected) {
-    expected = _.chunk(expected, 2);
-    assert.strictEqual(expected.length, logs.length);
-    _.each(
-      expected
-    , function(x, i) {
-        assert.strictEqual(x[0], logs[i].level);
-        assert.strictEqual(x[1], logs[i].message);
+describe('A logger', () => {
+  it('should log messages', () => {
+    const logs = [];
+    const logger = woody
+      .as(woody.bracketed())
+      .to((level, msg) => {
+        logs.push({ level: level, message: msg })
       });
-  };
 
-  describe('baseline logger', function() {
-    it('logs level and message', function() {
-      var logger = woody
-        .as(woody.bracketed())
-        .to(function(level, message) {
-          logs.push({ level: level, message: message });
-        });
+    logger
+      .fatal('foo-0')
+      .error('foo-1')
+      .warn('foo-2')
+      .info('foo-3')
+      .debug('foo-4')
+      .trace('foo-5')
+      .log('foo-6');
 
-      logger.info('foo-0')
-            .warn('foo-1')
-            .error('foo-2')
-            .verbose('foo-3')
-            .debug('foo-4')
-            .trace('foo-5')
-            .log('foo-6');
+    assert.strictEqual(logs[0].level, woody.level.FATAL);
+    assert.strictEqual(logs[1].level, woody.level.ERROR);
+    assert.strictEqual(logs[2].level, woody.level.WARN);
+    assert.strictEqual(logs[3].level, woody.level.INFO);
+    assert.strictEqual(logs[4].level, woody.level.DEBUG);
+    assert.strictEqual(logs[5].level, woody.level.TRACE);
+    assert.strictEqual(logs[6].level, woody.level.INFO);
 
-      validate(
-        [ woody.level.INFO, 'foo-0'
-        , woody.level.WARN, 'foo-1'
-        , woody.level.ERROR, 'foo-2'
-        , woody.level.VERBOSE, 'foo-3'
-        , woody.level.DEBUG, 'foo-4'
-        , woody.level.TRACE, 'foo-5'
-        , woody.level.INFO, 'foo-6' ]);
-    });
+    assert.strictEqual(logs[0].message, 'foo-0');
+    assert.strictEqual(logs[1].message, 'foo-1');
+    assert.strictEqual(logs[2].message, 'foo-2');
+    assert.strictEqual(logs[3].message, 'foo-3');
+    assert.strictEqual(logs[4].message, 'foo-4');
+    assert.strictEqual(logs[5].message, 'foo-5');
+    assert.strictEqual(logs[6].message, 'foo-6');
   });
 
-  describe('contextualized logger', function() {
-    it('stacks it\'s contexts', function() {
-      var logger = woody
-        .as(function(level, contexts, message) { logs.push(contexts); })
+  it('should be able to be contextualized', () => {
+    const logs = [];
+    const logger = woody
+      .as(woody.bracketed())
+      .to((level, msg) => {
+        logs.push(msg);
+      });
+
+      logger.info('foo');
+      assert.strictEqual(logs[0], 'foo');
+
+      logger.fork('qux').info('foo');
+      assert.strictEqual(logs[1], '[qux] foo');
+
+      logger.fork('qux').fork('baz').info('foo');
+      assert.strictEqual(logs[2], '[qux][baz] foo');
+  });
+
+  it('should stack it\s contexts', () => {
+    const loggerContexts = [];
+    const logger = woody
+      .as((level, contexts, messages) => {
+        loggerContexts.push(contexts);
+      })
+      .to(woody.nowhere);
+
+    logger.log();
+    assert.strictEqual(loggerContexts[0].length, 0);
+
+    logger.fork('foo').log();
+    assert.strictEqual(loggerContexts[1].length, 1);
+    assert.strictEqual(loggerContexts[1][0], 'foo');
+
+    logger.fork('foo').fork('bar').log();
+    assert.strictEqual(loggerContexts[2].length, 2);
+    assert.strictEqual(loggerContexts[2][0], 'foo');
+    assert.strictEqual(loggerContexts[2][1], 'bar');
+
+    logger.fork().log();
+    assert.strictEqual(loggerContexts[3].length, 0);
+
+    logger.fork().fork().log();
+    assert.strictEqual(loggerContexts[4].length, 0);
+  })
+
+  it('should keep independent contexts', () => {
+    const loggerContexts = [];
+    const logger = woody
+      .as((level, contexts, messages) => {
+        loggerContexts.push(contexts);
+      })
+      .to(woody.nowhere);
+
+    logger.log();
+    assert.strictEqual(loggerContexts[0].length, 0);
+
+    const logger2 = logger.fork('foo');
+    logger2.log();
+    assert.strictEqual(loggerContexts[1].length, 1);
+
+    const logger3 = logger2.fork('bar')
+    logger3.log();
+    assert.strictEqual(loggerContexts[2].length, 2);
+
+    logger.log();
+    assert.strictEqual(loggerContexts[3].length, 0);
+
+    logger.fork('foo').log();
+    assert.strictEqual(loggerContexts[4].length, 1);
+
+    logger.fork('foo').fork('bar').log();
+    assert.strictEqual(loggerContexts[5].length, 2);
+  });
+
+  it('should cull logs based on it\'s `conditionals', () => {
+    const logs = [];
+    const logger = woody
+      .as(woody.bracketed())
+      .to((level, msg) => {
+        logs.push({ level, msg });
+      });
+
+    logger
+      .if(level => level > woody.level.DEBUG)
+      .fatal()
+      .error()
+      .warn()
+      .info()
+      .debug()
+      .trace();
+
+    assert.strictEqual(logs.length, 4);
+    assert.strictEqual(logs[0].level, woody.level.FATAL);
+    assert.strictEqual(logs[1].level, woody.level.ERROR);
+    assert.strictEqual(logs[2].level, woody.level.WARN);
+    assert.strictEqual(logs[3].level, woody.level.INFO);
+  });
+
+  it('should short-cuit conditionals', () => {
+    var i = 0;
+    const logs = [];
+    const logger = woody
+      .as(woody.bracketed())
+      .to((level, msg) => {
+        i += 1;
+        logs.push({ level, msg });
+      });
+
+    logger
+      .if(level => level > woody.level.DEBUG)
+      .if(level => i < 3)
+      .trace()
+      .trace()
+      .trace()
+      .info()
+      .info()
+      .info()
+      .info();
+
+    assert.strictEqual(logs.length, 3);
+    assert.strictEqual(logs[0].level, woody.level.INFO);
+    assert.strictEqual(logs[1].level, woody.level.INFO);
+    assert.strictEqual(logs[2].level, woody.level.INFO);
+  });
+});
+
+describe('Built-in combinator', () => {
+  describe('Timestamped', () => {
+    it('should render timestamps', () => {
+      const stamps = [];
+      const logger = woody
+        .as((level, [ stamp ], message) => {
+          stamps.push(stamp);
+        })
         .to(woody.nowhere);
 
-      logger.log();
-      logger.fork('ctx').info();
-      logger.log();
-      logger.fork('ctx').fork('foo').fork('bar').log();
+      logger.fork(woody.timestamp()).log()
+      logger.fork(woody.timestamp('YYYY')).log();
 
-      var i = 0
-        , f = logger.fork(function() { return '' + (i++); });
-      _.times(2, f.log.bind(f));
-
-      var expected = [
-        []
-      , [ 'ctx' ]
-      , []
-      , [ 'ctx', 'foo', 'bar' ]
-      , [ '0' ]
-      , [ '1' ] ];
-
-      assert.strictEqual(expected.length, logs.length);
-      _.each(_.zip(expected, logs), _.spread(function(ex, actual) {
-        assert.strictEqual(ex.length, actual.length);
-        _.each(_.zip(ex, actual), _.spread(function(exName, actualName) {
-          assert.strictEqual(exName, actualName);
-        }));
-      }));
-    });
-
-    it('returns the same, but not identical logger if context is null/undefined', function() {
-      var logger = woody
-        .as(function(level, contexts, message) { logs.push(contexts); })
-        .to(woody.nowhere);
-
-      logger.log('test');
-      logger.fork().log('test');
-
-      assert.strictEqual(logs[0].length, 0);
-      assert.strictEqual(logs[1].length, 0);
-
-      logger.fork('cat').log('test');
-      logger.fork('cat').fork().log('test');
-
-      assert.strictEqual(logs[2].length, 1);
-      assert.strictEqual(logs[3].length, 1);
-
-      assert.strictEqual(logs[2][0], 'cat');
-      assert.strictEqual(logs[3][0], 'cat');
+      assert(moment(stamps[0]));
+      assert.strictEqual(stamps[1], new Date().getFullYear().toString());
     });
   });
 
-  describe('Built-in logging combinators', function() {
-    var logger = null;
-    beforeEach(function() {
-      logger = woody
-        .as(woody.bracketed())
-        .to(function(level, message) {
-          logs.push({ level: level, message: message });
-        });
-    });
+  describe('Level', () => {
+    it('should render the level', () => {
+      const levels = [];
+      const logger = woody
+        .as((_, [ level ], message) => {
+          levels.push(level);
+        })
+        .to(woody.nowhere)
+        .fork(woody.level())
+        .fatal()
+        .error()
+        .warn()
+        .info()
+        .debug()
+        .trace();
 
-    describe('Timestamped', function() {
-      it('Renders timestamps', function() {
-        var loggerTimed = logger.fork(woody.timestamp());
-        loggerTimed.log('test');
-        var date = _.takeWhile(
-          _.drop(logs[0].message, 1)
-        , function(c) { return c !== ']'; }).join('');
-        assert(moment(date));
-      });
-    });
-
-    describe('Level', function() {
-      it('Renders levels', function() {
-        var loggerLevel = logger.fork(woody.level());
-        loggerLevel.log('test');
-        var level = _.takeWhile(
-          _.drop(logs[0].message, 1)
-        , function(c) { return c !== ']'; }).join('');
-        assert(level === 'INFO');
-      });
+      assert.strictEqual(levels[0], 'FATAL');
+      assert.strictEqual(levels[1], 'ERROR');
+      assert.strictEqual(levels[2], 'WARN');
+      assert.strictEqual(levels[3], 'INFO');
+      assert.strictEqual(levels[4], 'DEBUG');
+      assert.strictEqual(levels[5], 'TRACE');
     });
   });
+});
 
-  describe('Sequencing', function() {
-    describe('Logger.sequence', function() {
-      it('invokes the current logger first, and then the second', function() {
-        var x = null;
-        var msgs = [];
-        var logger1 = woody
-          .as(woody.bracketed())
-          .to(function(level, rendered) {
-            assert.strictEqual(x, null);
-            assert.strictEqual(rendered, 'test');
-            x = 10;
-          });
+describe('Chain operations:', () => {
+  describe('`Logger#sequence`', () => {
+    it('should invoke the current logger first, then the second', () => {
 
-        var logger2 = woody
+        let x = null;
+
+        const logger1 = woody
           .as(woody.bracketed())
-          .to(function(level, rendered) {
+          .to((level, rendered) => { x = 'foo'; });
+
+        const logger2 = woody
+          .as(woody.bracketed())
+          .to((level, rendered) => {
             assert.notStrictEqual(x, null);
-            assert.strictEqual(rendered, 'test');
           });
 
-        var logger3 = logger1.sequence(logger2);
-
+        const logger3 = logger1.sequence(logger2);
         logger3.log('test');
-
         assert.notStrictEqual(x, null);
-      });
     });
-  });
-
-  describe('Conditionals', function() {
-    /* TODO: write tests for this... */
   });
 });
