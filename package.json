@@ -34,7 +34,9 @@
     "karma": "^0.13.9",
     "karma-browserify": "^4.3.0",
     "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.1",
     "mocha": "^2.1.0",
+    "phantomjs": "^1.9.18",
     "source-map-support": "^0.3.2",
     "vinyl-source-stream": "^1.1.0"
   }
