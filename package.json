@@ -4,7 +4,9 @@
   "description": "Tiny logging combinator library for node",
   "main": "index.js",
   "scripts": {
-    "test": "gulp && mocha --reporter=list --compilers js:babel/register test/log.js"
+    "test": "gulp && npm run test:node && npm run test:browser",
+    "test:node": "mocha --reporter=list --compilers js:babel/register",
+    "test:browser": "./node_modules/.bin/karma start --browsers PhantomJS --single-run"
   },
   "repository": {
     "type": "git",
