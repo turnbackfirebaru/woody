@@ -26,10 +26,16 @@
   },
   "devDependencies": {
     "babel": "^5.8.21",
+    "babelify": "^6.3.0",
+    "browserify": "^11.1.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.0",
     "gulp-sourcemaps": "^1.5.2",
+    "karma": "^0.13.9",
+    "karma-browserify": "^4.3.0",
+    "karma-mocha": "^0.2.0",
     "mocha": "^2.1.0",
-    "source-map-support": "^0.3.2"
+    "source-map-support": "^0.3.2",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
