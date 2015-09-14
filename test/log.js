@@ -234,22 +234,21 @@ describe('Built-in combinator', () => {
 describe('Chain operations:', () => {
   describe('`Logger#sequence`', () => {
     it('should invoke the current logger first, then the second', () => {
+      let x = null;
 
-        let x = null;
+      const logger1 = woody
+        .as(woody.bracketed())
+        .to((level, rendered) => { x = 'foo'; });
 
-        const logger1 = woody
-          .as(woody.bracketed())
-          .to((level, rendered) => { x = 'foo'; });
+      const logger2 = woody
+        .as(woody.bracketed())
+        .to((level, rendered) => {
+          assert.notStrictEqual(x, null);
+        });
 
-        const logger2 = woody
-          .as(woody.bracketed())
-          .to((level, rendered) => {
-            assert.notStrictEqual(x, null);
-          });
-
-        const logger3 = logger1.sequence(logger2);
-        logger3.log('test');
-        assert.notStrictEqual(x, null);
+      const logger3 = logger1.sequence(logger2);
+      logger3.log('test');
+      assert.notStrictEqual(x, null);
     });
   });
 });
