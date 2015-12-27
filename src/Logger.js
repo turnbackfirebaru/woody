@@ -106,9 +106,19 @@ export default class Logger {
 
   /**
    * Alias for `fork`
+   * @deprecated
    */
 
   push(context) {
+    return this.fork(context);
+  }
+
+
+  /**
+   * Alias for `fork`
+   */
+
+  module(context) {
     return this.fork(context);
   }
 
@@ -146,7 +156,7 @@ export default class Logger {
 
   /**
    * Pipe the rendered output of this logger into another
-   * comitter.
+   * committer.
    *
    * @param {!Logger} other
    * The logger to sequence
