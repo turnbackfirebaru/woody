@@ -21,22 +21,52 @@ logger.warn('foo', 'bar'); // => [WARN][2015-06-02 ...][woody] foo bar
 $ npm install --save woody
 ```
 
+## Why another logging library?
+
+I wanted a logging library that focuses on simplicity and **expressiveness**
+over configuration, that made making **module-local loggers** as simple as
+possible.
+
+### Project goals
+
+* Expressive, unobstrusive logging library
+* Simple to contextualize a logger, in other words: easy to put a line of output
+  into context.
+* Compatibility with `console.log` in terms of all logging functions (same
+  semantics)
+* As small as possible developer "buy-in" - it should be easy to pack your bags
+  and leave woody for something else
+* Consistency with existing logging projects - e.g. same log-level names and
+  weighting order.
+
 ## Usage
 
 The idea of woody is to make it as easy as possible to contextualize logging.
 The application or library using woody could have a root logger and then pass
 "contextualized" sub-loggers into different areas of the codebase.
 
+##### Logger#log
+
 The `.log(...)` and friends are semantically identical with the `console.log`
 function and has a straight forward mapping provided by `woody.console`.
+
+##### Logger#fork
 
 The `.fork(...)` function takes either a string or a function and creates a
 **new logger** with the new context pushed onto it's context stack. The old
 logger remains in tact and operationally independent; It can be used as before.
 
+##### Logger#if
+
 The `.if(...)` function takes either a log level to "set the bar" and cull any
 levels lower than the given level, or a function that is evaluated on each
 log application.
+
+##### Logger#to
+
+The `.to(...)` function takes one or more committers as input, all of which
+will be invoked upon logging. This creates a new logger that effectfully calls
+it's base's commit functions upon logging.
 
 > :warning: Note that since functions can capture state at site of definition,
 > threading down a function may not be a great idea. It's best used for internal
@@ -58,7 +88,7 @@ const Level = {
 };
 ```
 
-### Application domains
+### Application domains aka modules
 
 The `.fork(...)` function lends itself very well to creating application or
 library domain specific loggers:
@@ -168,6 +198,33 @@ function foo(bar, logger=woody.noop) {
 > :warning: `noop` only means it does not render or commit anything.
 > Sequencing it with another logger using `.sequence` will *not* return a `noop`
 > logger, but a logger that applies both the `noop` and the second logger.
+
+### Where's the stock logger X?
+
+For now I have decided to not include "simple" resource-based loggers such as
+logging to file. **Resource management is not the
+responsibility nor the intended purpose of woody.** Writing a file logger is
+trivial, however:
+
+```javascript
+import fs from 'fs';
+import woody from 'woody';
+
+// open the file
+const fd = fs.openSync('/var/log/my-log.log', 'w');
+const logger = woody
+  .as(woody.bracketed())
+  .to((level, message) => {
+    // write to the file
+    try {
+      fs.writeSync(fd, `${level}: ${message}`);
+    } catch() { /* ... */ }
+  });
+```
+
+Since a logger instance should not have to care about the resources it happens
+to consume, the management of these is out-sourced. Should a committer defect,
+it has to handle that error itself.
 
 ### Integration with `debug`
 
