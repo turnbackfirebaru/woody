@@ -13,7 +13,7 @@ import Logger from './Logger';
  */
 export function as(render) {
   return {
-    to: committer => new Logger(committer, render)
+    to: (...committers) => new Logger(committers, render)
   };
 };
 

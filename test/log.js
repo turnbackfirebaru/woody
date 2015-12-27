@@ -135,6 +135,24 @@ describe('A logger', () => {
     assert.strictEqual(logs[2].level, woody.level.WARN);
   });
 
+  it('should be able to commit to multiple places', () => {
+    const logsA = [], logsB = [];
+    const logger = woody
+      .as(woody.bracketed())
+      .to(() => logsA.push('x'));
+
+    const logger2 = logger
+      .to(() => logsB.push('x'));
+
+    logger.log();
+    assert.strictEqual(logsA.length, 1);
+    assert.strictEqual(logsB.length, 0);
+
+    logger2.log();
+    assert.strictEqual(logsA.length, 2);
+    assert.strictEqual(logsB.length, 1);
+  });
+
   it('should cull logs based on it\'s `conditionals', () => {
     const logs = [];
     const logger = woody

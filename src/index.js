@@ -36,17 +36,17 @@ export default {
  */
 
   Logger: require('./Logger')
-, as: as
-, noop: noop
+, as:     as
+, noop:   noop
 
 /**
  * Renderers
  */
 
-, bracketed: bracketed
-, dotted: dotted
+, bracketed:   bracketed
+, dotted:      dotted
 , stringified: stringified
-, verbatim: verbatim
+, verbatim:    verbatim
 
 /**
  * Committers
@@ -54,7 +54,7 @@ export default {
 
 , console: toConsole
 , nowhere: toNowhere
-, log4js: toLog4js
+, log4js:  toLog4js
 
 /**
  * Presets
@@ -65,6 +65,6 @@ export default {
  * Built-in context functions
  */
 , timestamp: timestamp
-, level: _.assign(level, Level)
+, level:     _.assign(level, Level)
 
 }
