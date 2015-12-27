@@ -45,12 +45,12 @@ The idea of woody is to make it as easy as possible to contextualize logging.
 The application or library using woody could have a root logger and then pass
 "contextualized" sub-loggers into different areas of the codebase.
 
-##### Logger#log
+##### Logger#log | trace | debug | info | warn | error | fatal
 
-The `.log(...)` and friends are semantically identical with the `console.log`
-function and has a straight forward mapping provided by `woody.console`.
+The `.log(...)` and friends are semantically identical to the `console.log`
+function and have a straight forward mapping provided by `woody.console`.
 
-##### Logger#fork
+##### Logger#fork | module
 
 The `.fork(...)` function takes either a string or a function and creates a
 **new logger** with the new context pushed onto it's context stack. The old
@@ -65,7 +65,18 @@ log application.
 ##### Logger#to
 
 The `.to(...)` function takes one or more committers as input, all of which
-will be invoked upon logging. This creates a new logger that effectfully calls
+will be invoked upon logging. A comitter is nothing but a function of shape
+`(level, message [, callback]) => { ... }`, where `level` indicates the
+log-level, the message is the rendered message string and the callback allows
+for asynchronous processing of the message. The caller of e.g. `Logger#log`
+will then recieve a promise that is either rejected or resolved based on the
+callback. The callback is of the shape `function([err]) => { ... }`.
+
+Note, however, that since `log` and friends are conceptually unaware of what
+a committer is doing, and a logger can have multiple committers, the promise
+is the output of a `Promise.all` on all commit calls.
+
+Also note that `.to(...)` actually creates a new logger that effectfully calls
 it's base's commit functions upon logging.
 
 > :warning: Note that since functions can capture state at site of definition,

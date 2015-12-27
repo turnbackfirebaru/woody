@@ -2,6 +2,7 @@ import woody from '..';
 import _ from 'lodash';
 import assert from 'assert';
 import moment from 'moment';
+import Promise from 'promise';
 
 describe('A logger', () => {
   it('should log messages', () => {
@@ -151,6 +152,40 @@ describe('A logger', () => {
     logger2.log();
     assert.strictEqual(logsA.length, 2);
     assert.strictEqual(logsB.length, 1);
+  });
+
+  it('should expose a promise upon logging - `.then`', () => {
+    return new Promise((resolve) => {
+      const logger = woody
+        .as(woody.bracketed())
+        .to(woody.console)
+        .log()
+        .then(resolve);
+    });
+  });
+
+  it('should expose a promise upon logging - `.catch`', () => {
+    return new Promise((resolve) => {
+      const logger = woody
+        .as(woody.bracketed())
+        .to((level, message, cb) => {
+          cb(new Error())
+        })
+        .log()
+        .catch(resolve);
+    });
+  });
+
+  it('should allow committers to return a promise', () => {
+    return new Promise((resolve) => {
+      const logger = woody
+        .as(woody.bracketed())
+        .to((level, message) => {
+          return Promise.reject(new Error())
+        })
+        .log()
+        .catch(resolve);
+    });
   });
 
   it('should cull logs based on it\'s `conditionals', () => {

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import Level from './Level';
 import moment from 'moment';
 import { timestamped, level } from './comb';
+import Promise from 'promise';
 
 /**
  * @class
@@ -51,24 +52,59 @@ export default class Logger {
           ? cond(level)
           : (_.isNumber(cond) ? (level >= cond) : cond)))
     ) {
-      this._commit(
-          level
-        , this._render.call(
-            this
-          , level
-          , _.map(this._contexts, context =>
-              _.isFunction(context)
-                ? context.apply({ level: level})
-                : context)
-          , _.toArray(args)));
+      var p = this._commit(
+        level
+      , this._render.call(
+          this
+        , level
+        , _.map(this._contexts, context =>
+            _.isFunction(context)
+              ? context.apply({ level: level})
+              : context)
+        , _.toArray(args)));
+      return this._createHull(_.bindAll(p));
+    } else {
+      var p = Promise.resolve(undefined);
+      return this._createHull(_.bindAll(p));
     }
-    return this;
   };
 
+  _createHull(extra) {
+    return _.assign({
+      fatal:    _.bind(this.fatal, this)
+    , error:    _.bind(this.error, this)
+    , warn:     _.bind(this.warn, this)
+    , log:      _.bind(this.log, this)
+    , info:     _.bind(this.info, this)
+    , debug:    _.bind(this.debug, this)
+    , trace:    _.bind(this.trace, this)
+    , fork:     _.bind(this.fork, this)
+    , module:   _.bind(this.module, this)
+    , push:     _.bind(this.push, this)
+    , if:       _.bind(this.if, this)
+    , to:       _.bind(this.to, this)
+    , sequence: _.bind(this.sequence, this)
+    }, extra);
+  }
+
   _commit(level, message) {
-    _.each(this._committers, committer => {
-      committer.call(this, level, message);
-    });
+    return Promise.all(_.map(this._committers, committer => {
+      // the committer may take an optional callback
+      if (committer.length > 2) {
+        return new Promise((resolve, reject) => {
+          committer.call(this, level, message, (err) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(undefined);
+            }
+          });
+        });
+      } else {
+        // allow the committer to return a promise
+        return Promise.resolve(committer.call(this, level, message));
+      }
+    }));
   }
 
   /**
